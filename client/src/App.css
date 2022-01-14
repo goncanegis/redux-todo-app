@@ -418,3 +418,15 @@ meta,
 [property="todo"] .view:focus-within button {
   display: none !important;
 }
+
+.loading {
+  padding: 15px;
+  font-size: 18px;
+}
+
+.error {
+  padding: 15px;
+  font-size: 16px;
+  color: lightcoral;
+  font-weight: bold;
+}
