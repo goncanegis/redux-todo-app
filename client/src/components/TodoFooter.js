@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { useSelector } from "react-redux"
 import {
   changeActiveFilter,
@@ -13,6 +13,10 @@ export const TodoFooter = () => {
   const activeFilter = useSelector(selectActiveFilter)
   const itemsLeft = items.filter((item) => !item.completed).length
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    localStorage.setItem("activeFilter", activeFilter)
+  }, [activeFilter])
 
   return (
     <footer className="footer">

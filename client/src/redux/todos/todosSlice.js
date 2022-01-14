@@ -1,43 +1,10 @@
-import { createSlice, createAsyncThunk, nanoid } from "@reduxjs/toolkit"
-import axios from "axios"
-
-export const getTodosAsync = createAsyncThunk(
-  "todos/getTodosAsync",
-  async () => {
-    const res = await axios(`${process.env.REACT_APP_API_BASE_URL}/todos`)
-    return res.data
-  }
-)
-
-export const addTodoAsync = createAsyncThunk(
-  "todos/addTodoAsync",
-  async (data) => {
-    const res = await axios.post(
-      `${process.env.REACT_APP_API_BASE_URL}/todos`,
-      data
-    )
-    return res.data
-  }
-)
-
-export const toggleTodoAsync = createAsyncThunk(
-  "todos/toggleTodoAsync",
-  async ({ id, data }) => {
-    const res = await axios.patch(
-      `${process.env.REACT_APP_API_BASE_URL}/todos/${id}`,
-      data
-    )
-    return res.data
-  }
-)
-
-export const removeTodoAsync = createAsyncThunk(
-  "todos/removeTodoAsync",
-  async (id) => {
-    await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/todos/${id}`)
-    return id
-  }
-)
+import { createSlice } from "@reduxjs/toolkit"
+import {
+  getTodosAsync,
+  addTodoAsync,
+  toggleTodoAsync,
+  removeTodoAsync,
+} from "./services"
 
 export const todosSlice = createSlice({
   name: "todos",
@@ -45,7 +12,7 @@ export const todosSlice = createSlice({
     items: [],
     isLoading: false,
     error: null,
-    activeFilter: "all",
+    activeFilter: localStorage.getItem("activeFilter"),
     addNewTodoLoading: false,
     addNewTodoError: null,
     addNewTodo: {
@@ -62,7 +29,7 @@ export const todosSlice = createSlice({
     changeActiveFilter: (state, action) => {
       state.activeFilter = action.payload
     },
-    clearCompleted: (state, action) => {
+    clearCompleted: (state) => {
       const filtered = state.items.filter((item) => item.completed === false)
       state.items = filtered
     },
@@ -81,7 +48,7 @@ export const todosSlice = createSlice({
       state.isLoading = false
     },
     // add todos
-    [addTodoAsync.pending]: (state, action) => {
+    [addTodoAsync.pending]: (state) => {
       state.addNewTodo.isLoading = true
     },
     [addTodoAsync.fulfilled]: (state, action) => {
